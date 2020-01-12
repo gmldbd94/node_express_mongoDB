@@ -13,7 +13,7 @@ router.get('/user/all', User.show_all); //모든회원정보 보기
 router.delete('/user/delete/:user_id', User.delete); // 계정 삭제
 
 //board routes
-router.get('/board/all', Board.all); // 모든 게시물 보기
+router.get('/board/:page_num', Board.all); // 모든 게시물 보기
 router.get('/board/show/:board_id', Board.read); // 특정 게시물 보기
 router.post('/board/create', Board.create); // 게시물 작성하기
 router.put('/board/update/:board_id', Board.update); // 게시물 수정하기
@@ -25,7 +25,8 @@ router.post('/comment/create/:board_id', Comment.create); // 댓글 작성하기
 router.delete('/commnet/delete/:comment_id', Comment.delete); // 특정 댓글 삭제하기
 router.put('/comment/:comment_id', Comment.update); // 댓글 업데이트하기
 router.post('/re_comment/create/:comment_id', Comment.re_comment); // 특정 댓글에 대댓글 남기기
-router.use('/nosql', require('./NoSQL'));
 
+//like routes
+router.post('/Like/:board_id', Like.toggle_like);
 
 module.exports = router;

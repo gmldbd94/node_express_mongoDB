@@ -28,11 +28,12 @@ const UserSchema = new Schema({
 
 });
 
-UserSchema.post('deleteOne', async function(next){
+UserSchema.pre('deleteOne', async function(next){
     //지우는것만 바로 불러올수 있다.
-    await Board.deleteMany({user: this}).exec();
-    await Comment.deleteMany({user: this}).exec();
-    await Like.deleteMany({user: this}).exec();    
+    const self = this._conditions._id;
+    await Board.deleteMany({user: self}).exec();
+    await Comment.deleteMany({user: self}).exec();
+    await Like.deleteMany({user: self}).exec();    
 });
 
 module.exports = mongoose.model('User', UserSchema);

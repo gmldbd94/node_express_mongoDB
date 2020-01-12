@@ -1,18 +1,7 @@
-//상태코드
-const authUtil = require('../module/utils/authUtil');
-const utils = require('../module/utils/utils');
-const responseMessage = require('../module/utils/responseMessage');
-const statusCode = require('../module/utils/statusCode');
-//ex>res.status(statusCode.BAD_REQUEST).send(utils.successFalse(responseMessage.X_NULL_VALUE(missParameters)));
-
 const Board = require('../model/Board');
 const User = require('../model/User');
 const Comment = require('../model/Comment');
 
-function is_like(){
-    const is_like = Like.find({})
-    return result;
-} 
 module.exports = {
 
     // 게시글 작성하기
@@ -51,8 +40,15 @@ module.exports = {
 
     // 모든 게시글 불러오기
     all: async (req, res) =>{
+        const page_num = req.params.page_num;
+        
+        // const page_max = await Board.bsonsize();
+        // console.log(page_max);
         const result = await Board.find()
                                     .populate('user','name email')
+                                    .skip(page_num * 3 - 3)
+                                    .limit(3)
+                                    
         return res.json(result);
     },
 
@@ -71,8 +67,7 @@ module.exports = {
 
     //특정 게시글 삭제하기
     delete: async (req, res) =>{
-        result = await Board.delete({id: req.params.board_id});
+        result = await Board.findByIdAndDelete(req.params.board_id);
         return res.json({message: "삭제 완료"});
-        
     }
 }

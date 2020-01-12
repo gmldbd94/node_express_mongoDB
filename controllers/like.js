@@ -1,23 +1,28 @@
 //상태코드
-const authUtil = require('../module/utils/authUtil');
-const utils = require('../module/utils/utils');
-const responseMessage = require('../module/utils/responseMessage');
-const statusCode = require('../module/utils/statusCode');
 const User = require('../model/User');
 const Board = require('../model/Board');
 const Like = require('../model/Like');
-//ex>res.status(statusCode.BAD_REQUEST).send(utils.successFalse(responseMessage.X_NULL_VALUE(missParameters)));
+
 module.exports = {
     toggle_like: async(req, res) => {
         const user = req.body.user;
-        const { board }  = req.body.params.board_id;
+        const { board_id }  = req.params;
         let result = {};
-        const is_liked = await Like.find({user: user, board: board});
+        const is_liked = await Like.findOne({$and: [{user: user}, {board: board_id}]});
+        
+        // 해당 게시물에 좋아요 일때
         if(is_liked){
-            await Like.deleteOne(is_liked);
+            await Like.findByIdAndDelete(is_liked);
             result = {data : false}
-        }else{
-            await Like.save(is_liked);
+        }
+        // 해당 게시물에 좋아요 아닐때
+        else{
+            //creat에 save명령어도 같이 실행된다.
+            await Like.create({
+                user: user, 
+                board: board_id
+            });
+            // await liking.save();
             result = {data : true}
         }
         

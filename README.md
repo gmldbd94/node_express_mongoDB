@@ -1,21 +1,31 @@
 # Dyeong_RESTful_project
 
-## Architecture
-### config
-- 보안과 관련된 파일들을 담는 폴더
+# DB
+MongoDB
 
-### model
-- DB를 접근하는 모듈을 담는 폴더
+## 기능
+- User :
+    - 유저 회원가입
+    - 유저 로그인
+    - 유저 보기
+    - 유저 삭제
+        - 게시글 삭제
+        - 댓글 (안보이기)
 
-### module
-- db/pool.js : DB 쿼리 적용 모듈
-- utils/jwt.js : JWT 모듈
-- utils/authUtil.js : JTW 적용 미들웨어
-- utils/responseMessage.js : 응답 메세지 집합
-- utils/statusCode.js : 상태코드 집합
-- utils/utils.js : 응답 메세지 포맷 집합
+- Board :
+    - 게시글 생성
+    - 게시글 모두보기(페이지네이션)
+    - 특정 게시글 보기
+    - 게시글 삭제
+        - 댓글 삭제
+    - 게시글 업데이트
 
-### routes
-- Auth : 계정 관리 라우트
-- Boards : 게시글 관련 라우트
-- Boards/Comments : 댓글 관련 라우트
+- Comment : 
+    - 댓글 생성
+    - 대댓글 생성
+    - 댓글 삭제
+        - 대댓글 있을 시 content 삭제
+        - 대댓글 없을 시 댓글 삭제
+
+- Like : 
+    - 좋아요 toggle

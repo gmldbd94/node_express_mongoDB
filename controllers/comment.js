@@ -41,17 +41,19 @@ module.exports = {
     //특정 댓글 삭제하기
     delete: async (req, res) =>{
         const comment = await Comment.findById(req.params.comment_id);
-        
+        console.log(comment);
         //특정 댓글에 대댓글이 없을 때
-        if(!comment.re_comments){
-            await comment.deleteOne({_id: comment._id});
+        if(comment.re_comments.length === 0){
+            console.log("단일 삭제");
+            await Comment.findByIdAndDelete(comment);
         }
         //특정 댓글에 대댓글이 있을 때
         else{
+            console.log("대댓글 있져욤");
             comment.content = "삭제가 되었습니다."
             await comment.save();
         }
-        return res.json(result);
+        return res.json({message: true});
     },
 
     //특정 댓글에 대댓글 달기
@@ -61,7 +63,6 @@ module.exports = {
             user : req.body.user,
             parent_comment : req.params.comment_id
         });
-        console.log(comment);
         const result = await comment.save();
         return res.json(result);
     }

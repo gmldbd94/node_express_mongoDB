@@ -39,14 +39,22 @@ CommentSchema.post('save', async function(next){
     
 });
 
-//댓글 삭제시 해당 게시판 ref_댓글_배열에서 삭제
-CommentSchema.pre('deleteOne', async function(next){
-    const self = this;
-    //해당 게시판
-    let ref_board = await mongoose.model('Board').findById(self.board);
-    await ref_board.ref_comments.pull(self);
-    await ref_board.save();
-});
+//댓글 삭제시
+CommentSchema.pre(/Delete$/, async function(next){
+    const self = this._conditions._id;
 
+    //댓글일 때
+    if(self.parent_comment === undefined){
+        const ref_board = await mongoose.model('Board').findById(self.board);
+        console.log(ref_board);
+        await ref_board.updateOne({$pull: {comments: self}});
+    }
+    //대댓글 일때
+    else{
+        const parent_comment = await mongoose.model('Comment').findById(self.parent_comment);
+        console.log(parent_comment);
+        await parent_comment.updateOne({$pull : {re_comments: self._id}}).exec();
+    }
+});
 
 module.exports = mongoose.model('Comment', CommentSchema);
