@@ -42,13 +42,14 @@ module.exports = {
     all: async (req, res) =>{
         const page_num = req.params.page_num;
         
-        // const page_max = await Board.bsonsize();
-        // console.log(page_max);
-        const result = await Board.find()
+        const count_board = await Board.countDocuments();
+        const max_page = Math.ceil(count_board/3);
+        console.log(max_page);
+        let result = await Board.find()
                                     .populate('user','name email')
                                     .skip(page_num * 3 - 3)
                                     .limit(3)
-                                    
+        result.push({"max_page": max_page});
         return res.json(result);
     },
 
